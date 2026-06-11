@@ -14,6 +14,7 @@
 | 02 | [Report/02.REPORT.md](Report/02.REPORT.md) | [Prompting/02.Export-Transcript.md](Prompting/02.Export-Transcript.md) | repeat (ARRR) | D-LOC-01 | 2026-06-11 |
 | 03 | [Report/03.REPORT.md](Report/03.REPORT.md) | [Prompting/03.Export-Transcript.md](Prompting/03.Export-Transcript.md) | repeat (ARRR) | Logic+UI 전 묶음 | 2026-06-11 |
 | 04 | [Report/04.REPORT.md](Report/04.REPORT.md) | [Prompting/04.Export-Transcript.md](Prompting/04.Export-Transcript.md) | repeat (convert) | CL-R1/BATCH/OUT | 2026-06-11 |
+| 05 | [Report/05.REPORT.md](Report/05.REPORT.md) | [Prompting/05.Export-Transcript.md](Prompting/05.Export-Transcript.md) | repeat (Mom R2) | D-FMT-03+UI×3 | 2026-06-11 |
 
 ### 가상환경 설정 및 실행
 ```bash
@@ -26,7 +27,7 @@ venv\Scripts\activate
 # 가상환경 활성화 (macOS/Linux)
 source venv/bin/activate
 
-# 실행
+# 실행 (src 경로는 UnitConverter.py가 자동 설정)
 python UnitConverter.py
 
 # 가상환경 비활성화
@@ -38,12 +39,13 @@ deactivate
    ```
    meter:2.5
    ```
-   → 출력:
+   → 출력 (견적용 2자리):
    ```
    meter:2.5 = 2.5 meter
-   meter:2.5 = 8.2021 feet
-   meter:2.5 = 2.734 yard
+   meter:2.5 = 8.2 feet
+   meter:2.5 = 2.73 yard
    ```
+   여러 치수: 한 줄씩 입력 후 **빈 줄**로 변환 시작.
 
 2. 현재 지원 단위:
    - meter

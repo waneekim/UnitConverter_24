@@ -2,6 +2,8 @@
 
 ARCH_3FT_6IN = '3\'-6"'
 ARCH_9FT_2IN = '9\'-2"'
+ARCH_4HALF_IN = '4½"'
+ARCH_2QUARTER_IN = '2¼"'
 
 STEEL_DIMS_8 = [
     [ARCH_3FT_6IN],

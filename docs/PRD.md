@@ -89,6 +89,7 @@
 | **FR-FMT-01** | D-FMT-01 | R4 | 알 수 없는 단위·콜론 누락 입력은 **fail**한다. | 인터뷰 2분 손실 |
 | **FR-FMT-02** | D-FMT-02 | R4 | 빈 셀이 있으면 **incomplete**이며 `failed_lines`는 빈 리스트이다. | — |
 | **FR-OUT-01** | D-OUT-01 | R3 | *(선택)* 견적용 반올림·소수 자릿수 Rule을 적용한다. | 3~4분 손실 |
+| **FR-FMT-03** | D-FMT-03 | R1 | 분수 인치 단독 표기 `4½"`, `2¼"`를 소수 feet로 파싱한다 (`N½"` → `N.5/R1_DIVISOR`). | R2 증거 1 · 15분 |
 
 ### 4.2 Boundary Track — CLI 입력 (UI)
 
@@ -96,6 +97,9 @@
 |-------|----------|------|----------|----------|
 | **FR-IN-01** | U-IN-01 | R4 | `단위:값` 형식이 아니면(콜론 누락) **명확한 오류 메시지**를 표시하고 종료한다. | 콜론 누락 2분 |
 | **FR-IN-02** | U-IN-02 | R4 | 알 수 없는 단위면 **명확한 오류 메시지**를 표시한다. | — |
+| **FR-OUT-02** | U-OUT-01 | R3 | CLI 출력에 견적용 **2자리** 반올림 값을 표시한다. | R2 견적 3~4분 |
+| **FR-BATCH-02** | U-BATCH-01 | R4 | stdin **다중 줄** 1회 실행으로 N치수 변환한다. | R2 증거 3 · 8분 |
+| **FR-IN-03** | U-HINT-01 | R4 | 프롬프트·오류에 **한국어 입력 예시**를 표시한다. | R2 cmd 10분+ |
 
 ---
 
@@ -122,10 +126,12 @@ validate_lines(grid: list[list[str]]) -> dict
 | `convert_length(spec: str)` | `"3'-6""`, `"meter:2.5"` 등 | `ConversionResult`: 입력 표기, 소수 feet, meter/feet/yard, (선택) 반올림 |
 | `convert_lengths(specs: list[str])` | 치수 목록 (최대 8+ fixture) | `list[ConversionResult]` |
 
-### 5.3 `UnitConverter.py` (기존 — Boundary)
+### 5.3 `UnitConverter.py` (Boundary)
 
-- 단일 `input()` → `단위:값` 파싱 → 세 단위 출력 → 종료
-- FR-IN-01·FR-IN-02는 `main()` 경계에서 검증
+- `process_input(spec)` — 단일 치수 → 견적용 2자리 출력 3줄
+- `process_batch_input(specs)` — N치수 일괄 → `convert_lengths` 위임
+- `main()` — 다중 줄 입력(빈 줄 종료) 또는 단일 줄
+- FR-IN-01/02/03 · FR-OUT-02 · FR-BATCH-02 경계 검증
 
 ---
 
@@ -144,6 +150,12 @@ validate_lines(grid: list[list[str]]) -> dict
 | VL-R3-002 | FR-BATCH-01 | D-BATCH-01 | 8개 중 row 4 오환산 → fail `[4]` |
 | UI-R4-001 | FR-IN-01 | U-IN-01 | `meter2.5` stdin → 오류 메시지 |
 | UI-R4-002 | FR-IN-02 | U-IN-02 | `foo:1.0` stdin → unknown unit |
+| CL-R5-001 | FR-FMT-03 | D-FMT-03 | `4½"` → `feet_decimal=0.5625` |
+| CL-R5-002 | FR-FMT-03 | D-FMT-03 | `2¼"` → `feet_decimal=0.28125` |
+| UI-R5-001 | FR-OUT-02 | U-OUT-01 | `3'-6"` → 견적용 2자리 출력 |
+| UI-BATCH-001 | FR-BATCH-02 | U-BATCH-01 | STEEL_DIMS_8 8줄 → 24줄 출력 |
+| UI-HINT-001 | FR-IN-03 | U-HINT-01 | 오류 메시지 한국어 예시 |
+| UI-HINT-002 | FR-IN-03 | U-HINT-01 | 시작 프롬프트 한국어 |
 
 ### 6.1 Fixture (Mom Test)
 
@@ -151,6 +163,8 @@ validate_lines(grid: list[list[str]]) -> dict
 |------|-----|------|
 | `ARCH_3FT_6IN` | `'3\'-6"'` | FR-LOC-01/02 |
 | `ARCH_9FT_2IN` | `'9\'-2"'` | 일괄 fixture |
+| `ARCH_4HALF_IN` | `'4½"'` | FR-FMT-03 |
+| `ARCH_2QUARTER_IN` | `'2¼"'` | FR-FMT-03 |
 | `STEEL_DIMS_8` | 8행 그리드 | FR-BATCH-01 |
 
 ---
@@ -192,7 +206,8 @@ validate_lines(grid: list[list[str]]) -> dict
 | 3 | REFACTOR — Green 유지 정리 | 대기 |
 | 4 | `convert_length` / `convert_lengths` Command | 후속 |
 | 5 | `UnitConverter.py` FR-IN-01/02 (boundary) | 후속 |
-| 6 | FR-OUT-01 견적 반올림 (R3) | 선택 |
+| 6 | FR-OUT-01 견적 반올림 (R3) | **완료** |
+| 7 | Mom Test R2 — D-FMT-03 · U-OUT/BATCH/HINT | **완료** |
 
 ---
 
@@ -200,7 +215,9 @@ validate_lines(grid: list[list[str]]) -> dict
 
 | 문서 | 경로 |
 |------|------|
+| Mom Test R2 보고서 | [Report/mom-test-report-02.md](../Report/mom-test-report-02.md) |
 | Mom Test 보고서 | [Report/mom-test-report.md](../Report/mom-test-report.md) |
+| ARRR R2 플랜 | [ARRR-mom-test-r2.md](./ARRR-mom-test-r2.md) |
 | 세션 워크북 | [Report/session-workbook.md](../Report/session-workbook.md) |
 | 세션 보고서 | [Report/01.REPORT.md](../Report/01.REPORT.md) |
 | 인터뷰 프롬프트 | [Prompting/mom-test-prompt.md](../Prompting/mom-test-prompt.md) |

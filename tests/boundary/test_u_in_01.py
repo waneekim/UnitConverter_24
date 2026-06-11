@@ -1,8 +1,6 @@
 """U-IN-01 — UI-R4-001 (FR-IN-01)."""
 
-from UnitConverter import process_input
-
-ERROR_INVALID_FORMAT = "Invalid format. Use unit:value (ex: meter:2.5)"
+from UnitConverter import ERROR_INVALID_FORMAT, process_input
 
 
 def test_ui_r4_001_missing_colon_shows_error():

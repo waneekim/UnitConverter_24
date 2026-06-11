@@ -5,6 +5,8 @@ import re
 from constants import FEET_PER_METER, KNOWN_UNITS, R1_ARCH_INCH_DIVISOR, YARD_PER_METER
 
 _ARCH_PATTERN = re.compile(r"^(\d+)'-(\d+)\"$")
+_FRACTION_INCH_PATTERN = re.compile(r"^(\d+)(½|¼)\"$")
+_FRACTION_VALUE = {"½": 0.5, "¼": 0.25}
 
 
 class LengthSpecError(ValueError):
@@ -13,6 +15,19 @@ class LengthSpecError(ValueError):
 
 def is_arch_notation(spec: str) -> bool:
     return _ARCH_PATTERN.match(spec) is not None
+
+
+def is_fraction_inch_notation(spec: str) -> bool:
+    return _FRACTION_INCH_PATTERN.match(spec) is not None
+
+
+def parse_fraction_inch_to_feet(spec: str) -> float:
+    match = _FRACTION_INCH_PATTERN.match(spec)
+    if not match:
+        raise LengthSpecError(f"Invalid fraction inch notation: {spec}")
+    whole = int(match.group(1))
+    frac = _FRACTION_VALUE[match.group(2)]
+    return (whole + frac) / R1_ARCH_INCH_DIVISOR
 
 
 def parse_arch_to_feet(spec: str) -> float:
@@ -28,6 +43,8 @@ def parse_spec_to_feet_decimal(spec: str) -> float:
     """spec → canonical 소수 feet (Mom Test R1 SSOT)."""
     if is_arch_notation(spec):
         return parse_arch_to_feet(spec)
+    if is_fraction_inch_notation(spec):
+        return parse_fraction_inch_to_feet(spec)
 
     if ":" not in spec:
         raise LengthSpecError("Invalid format. Use unit:value (ex: meter:2.5)")

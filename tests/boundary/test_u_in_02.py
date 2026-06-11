@@ -9,4 +9,4 @@ def test_ui_r4_002_unknown_unit_shows_error():
     lines, error = process_input("foo:1.0")
     # Then
     assert lines == []
-    assert error == "Unknown unit: foo"
+    assert error == "알 수 없는 단위: foo. 예: meter, feet, yard"
