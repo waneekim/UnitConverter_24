@@ -1,0 +1,4 @@
+stdout=cm:2.54 = 0.03 meter
+cm:2.54 = 0.08 feet
+cm:2.54 = 0.03 yard
+cm:2.54 = 1.0 inch

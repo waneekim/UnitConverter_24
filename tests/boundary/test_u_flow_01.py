@@ -6,7 +6,7 @@ from UnitConverter import INPUT_PROMPT, process_input
 def test_ui_flow_001_single_input_immediate_three_lines():
     lines, error = process_input("meter: 2.5")
     assert error is None
-    assert len(lines) == 3
+    assert len(lines) == 4
     assert all("meter: 2.5" in line for line in lines)
 
 

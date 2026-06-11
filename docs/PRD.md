@@ -108,6 +108,9 @@
 | **FR-IN-03** | U-HINT-01 | R4 | 프롬프트·오류에 **한국어 입력 예시**를 표시한다. | R2 cmd 10분+ |
 | **FR-FLOW-01** | U-FLOW-01 | R4 | **단건** 실행 시 프롬프트 1회 → 즉시 출력한다. | R3 · 5분 |
 | **FR-SINGLE-01** | U-SINGLE-01 | R4 | **일괄**은 `--batch` 옵션으로만 다중 줄 입력한다. | R3 기대 vs 흐름 |
+| **FR-OUT-03** | U-OUT-02 | R3 | CLI 출력에 견적용 **2자리 inch** 줄을 표시한다 (`cm:2.54` → 1.0 inch). | R7 · 3분 |
+| **FR-BATCH-03** | U-BATCH-02 | R4 | `--batch` 일괄 모드 시작 시 **빈 줄 종료** 안내를 표시한다. | R7 · 5분 |
+| **FR-IN-04** | U-HINT-02 | R4 | 단건 실행 시 **일괄(`--batch`)** 사용법을 한 줄로 안내한다. | R7 · Q3 |
 
 ---
 
@@ -136,7 +139,7 @@ validate_lines(grid: list[list[str]]) -> dict
 
 ### 5.3 `UnitConverter.py` (Boundary)
 
-- `process_input(spec)` — 단일 치수 → 견적용 2자리 출력 3줄
+- `process_input(spec)` — 단일 치수 → 견적용 2자리 출력 4줄 (meter/feet/yard/inch)
 - `process_batch_input(specs)` — N치수 일괄 → `convert_lengths` 위임
 - `main()` — 기본 **단건** 1프롬프트; `python UnitConverter.py --batch` 일괄 모드
 - FR-IN-01/02/03 · FR-OUT-02 · FR-BATCH-02 경계 검증
@@ -161,16 +164,22 @@ validate_lines(grid: list[list[str]]) -> dict
 | CL-R5-001 | FR-FMT-03 | D-FMT-03 | `4½"` → `feet_decimal=0.5625` |
 | CL-R5-002 | FR-FMT-03 | D-FMT-03 | `2¼"` → `feet_decimal=0.28125` |
 | UI-R5-001 | FR-OUT-02 | U-OUT-01 | `3'-6"` → 견적용 2자리 출력 |
-| UI-BATCH-001 | FR-BATCH-02 | U-BATCH-01 | STEEL_DIMS_8 8줄 → 24줄 출력 |
+| UI-BATCH-001 | FR-BATCH-02 | U-BATCH-01 | STEEL_DIMS_8 8줄 → 32줄 출력 |
 | UI-HINT-001 | FR-IN-03 | U-HINT-01 | 오류 메시지 한국어 예시 |
 | UI-HINT-002 | FR-IN-03 | U-HINT-01 | 시작 프롬프트 한국어 |
 | CL-R6-001 | FR-FMT-04 | D-FMT-04 | `meter: 2.5` 공백 허용 |
-| UI-FLOW-001 | FR-FLOW-01 | U-FLOW-01 | 단건 즉시 3줄 출력 |
+| UI-FLOW-001 | FR-FLOW-01 | U-FLOW-01 | 단건 즉시 4줄 출력 |
 | UI-SINGLE-001 | FR-SINGLE-01 | U-SINGLE-01 | `--batch` 플래그 분기 |
 | CL-R7-001 | FR-UNIT-03 | D-UNIT-03 | `cm:100` → meter=1.0 |
 | CL-R7-002 | FR-UNIT-03 | D-UNIT-03 | `mm:2500` → meter=2.5 |
 | CL-R7-003 | FR-UNIT-04 | D-UNIT-04 | `inch:12` → feet=1.0, inch=12 |
 | CL-R7-004 | FR-UNIT-04 | D-UNIT-04 | `cm:2.54` → inch≈1.0 |
+| UI-R7-001 | FR-OUT-03 | U-OUT-02 | `cm:2.54` → inch 4번째 줄 |
+| UI-R7-002 | FR-OUT-03 | U-OUT-02 | `cm:254` → 100 inch |
+| UI-R7-003 | FR-BATCH-03 | U-BATCH-02 | `BATCH_INTRO`에 `--batch` |
+| UI-R7-004 | FR-BATCH-03 | U-BATCH-02 | `BATCH_PROMPT`에 빈 줄 |
+| UI-R7-005 | FR-IN-04 | U-HINT-02 | `SINGLE_MODE_HINT` 일괄 안내 |
+| UI-R7-006 | FR-IN-04 | U-HINT-02 | `INPUT_PROMPT` 단건 유지 |
 
 ### 6.1 Fixture (Mom Test)
 
@@ -225,6 +234,7 @@ validate_lines(grid: list[list[str]]) -> dict
 | 7 | Mom Test R2 — D-FMT-03 · U-OUT/BATCH/HINT | **완료** |
 | 8 | Mom Test R3 — D-FMT-04 · U-FLOW/SINGLE | **완료** |
 | 9 | Mom Test R6 — D-UNIT-03/04 (cm/mm/inch) | **완료** |
+| 10 | Mom Test R7 — U-OUT/BATCH/HINT-02 | **완료** |
 
 ---
 

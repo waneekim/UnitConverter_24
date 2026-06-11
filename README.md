@@ -44,13 +44,13 @@ deactivate
    meter:2.5 = 2.5 meter
    meter:2.5 = 8.2 feet
    meter:2.5 = 2.73 yard
+   meter:2.5 = 98.43 inch
    ```
    여러 치수(일괄): `python UnitConverter.py --batch` 후 한 줄씩 입력, **빈 줄**로 변환.
 
 2. 현재 지원 단위:
-   - meter
-   - feet
-   - yard
+   - meter, feet, yard, cm, mm, inch
+   - 건축 표기: `3'-6"`, `4½"`
 
 3. 새로운 단위가 추가될 때도 기존 코드의 변경이 최소화되도록 할 것.
 
