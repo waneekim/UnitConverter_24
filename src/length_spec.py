@@ -1,0 +1,48 @@
+"""치수 문자열 파싱 — 건축 표기·단위:값 SSOT."""
+
+import re
+
+from constants import FEET_PER_METER, KNOWN_UNITS, R1_ARCH_INCH_DIVISOR, YARD_PER_METER
+
+_ARCH_PATTERN = re.compile(r"^(\d+)'-(\d+)\"$")
+
+
+class LengthSpecError(ValueError):
+    """FR-IN-01/02 · convert_length 파싱 오류."""
+
+
+def is_arch_notation(spec: str) -> bool:
+    return _ARCH_PATTERN.match(spec) is not None
+
+
+def parse_arch_to_feet(spec: str) -> float:
+    match = _ARCH_PATTERN.match(spec)
+    if not match:
+        raise LengthSpecError(f"Invalid arch notation: {spec}")
+    feet = int(match.group(1))
+    inches = int(match.group(2))
+    return feet + inches / R1_ARCH_INCH_DIVISOR
+
+
+def parse_spec_to_feet_decimal(spec: str) -> float:
+    """spec → canonical 소수 feet (Mom Test R1 SSOT)."""
+    if is_arch_notation(spec):
+        return parse_arch_to_feet(spec)
+
+    if ":" not in spec:
+        raise LengthSpecError("Invalid format. Use unit:value (ex: meter:2.5)")
+
+    unit, value_str = spec.split(":", 1)
+    try:
+        value = float(value_str)
+    except ValueError:
+        raise LengthSpecError(f"Invalid number: {value_str}")
+
+    if unit not in KNOWN_UNITS:
+        raise LengthSpecError(f"Unknown unit: {unit}")
+
+    if unit == "meter":
+        return value * FEET_PER_METER
+    if unit == "feet":
+        return value
+    return value * FEET_PER_METER / YARD_PER_METER

@@ -1,0 +1,8 @@
+{
+  "feet_per_meter": 3.28084,
+  "yard_per_meter": 1.09361,
+  "r1_arch_inch_divisor": 8,
+  "feet_compare_epsilon": 1e-9,
+  "estimate_decimal_places": 2,
+  "known_units": ["meter", "feet", "yard"]
+}

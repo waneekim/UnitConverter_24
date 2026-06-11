@@ -1,35 +1,32 @@
-def main():
-    input_str = input("Insert value for converting (ex: meter:2.5): ")
+from convert_length import convert_length
+from length_spec import LengthSpecError
 
-    if ':' not in input_str:
-        print("Invalid format. Use unit:value (ex: meter:2.5)")
-        return
+INPUT_PROMPT = "Insert value for converting (ex: meter:2.5): "
 
-    unit, value_str = input_str.split(':', 1)
 
+def process_input(input_str: str) -> tuple[list[str], str | None]:
+    """stdin 한 줄을 파싱·변환. (출력 줄 목록, 오류 메시지) — 오류 시 줄 목록은 []."""
     try:
-        value = float(value_str)
-    except ValueError:
-        print(f"Invalid number: {value_str}")
+        result = convert_length(input_str.strip())
+    except LengthSpecError as e:
+        return [], str(e)
+
+    lines = [
+        f"{result.input_spec} = {result.meter} meter",
+        f"{result.input_spec} = {result.feet} feet",
+        f"{result.input_spec} = {result.yard} yard",
+    ]
+    return lines, None
+
+
+def main() -> None:
+    input_str = input(INPUT_PROMPT)
+    lines, error = process_input(input_str)
+    if error:
+        print(error)
         return
-
-    if unit == "meter":
-        meter_value = value
-    elif unit == "feet":
-        meter_value = value / 3.28084
-    elif unit == "yard":
-        meter_value = value / 1.09361
-    else:
-        print(f"Unknown unit: {unit}")
-        return
-
-    in_meters = meter_value
-    in_feet = meter_value * 3.28084
-    in_yards = meter_value * 1.09361
-
-    print(f"{value} {unit} = {in_meters} meter")
-    print(f"{value} {unit} = {in_feet} feet")
-    print(f"{value} {unit} = {in_yards} yard")
+    for line in lines:
+        print(line)
 
 
 if __name__ == "__main__":

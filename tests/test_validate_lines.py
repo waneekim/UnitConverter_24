@@ -1,19 +1,6 @@
 from validate_lines import validate_lines
 
-ARCH_3FT_6IN = '3\'-6"'
-ARCH_9FT_2IN = '9\'-2"'
-
-# Mom Test 철골 치수 8개 fixture (session-workbook 성공 기준 3)
-STEEL_DIMS_8 = [
-    [ARCH_3FT_6IN],
-    [ARCH_9FT_2IN],
-    ['12\'-0"'],
-    ['6\'-8"'],
-    ['4\'-0"'],
-    ['10\'-6"'],
-    ['8\'-3"'],
-    ['5\'-4"'],
-]
+from fixtures import ARCH_3FT_6IN, ARCH_9FT_2IN, STEEL_DIMS_8
 
 
 def test_arch_notation_3ft_6in_passes():

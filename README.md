@@ -6,6 +6,15 @@
 - 새로운 단위를 추가할 때 기존 코드의 변경이 최소화되도록 설계한다.
 - 각 단위 변환 로직은 테스트 코드로 검증한다.
 
+## 문서 (Report / Prompting)
+
+| NN | Report | Transcript | Phase | Test ID | 날짜 |
+|----|--------|------------|-------|---------|------|
+| 01 | [Report/01.REPORT.md](Report/01.REPORT.md) | [Prompting/01.Export-Transcript.md](Prompting/01.Export-Transcript.md) | RED | validate_lines 9개 | 2026-06-11 |
+| 02 | [Report/02.REPORT.md](Report/02.REPORT.md) | [Prompting/02.Export-Transcript.md](Prompting/02.Export-Transcript.md) | repeat (ARRR) | D-LOC-01 | 2026-06-11 |
+| 03 | [Report/03.REPORT.md](Report/03.REPORT.md) | [Prompting/03.Export-Transcript.md](Prompting/03.Export-Transcript.md) | repeat (ARRR) | Logic+UI 전 묶음 | 2026-06-11 |
+| 04 | [Report/04.REPORT.md](Report/04.REPORT.md) | [Prompting/04.Export-Transcript.md](Prompting/04.Export-Transcript.md) | repeat (convert) | CL-R1/BATCH/OUT | 2026-06-11 |
+
 ### 가상환경 설정 및 실행
 ```bash
 # 가상환경 생성
@@ -31,9 +40,9 @@ deactivate
    ```
    → 출력:
    ```
-   2.5 meter = 8.2 feet
-   2.5 meter = 2.7 yard
-   ...
+   meter:2.5 = 2.5 meter
+   meter:2.5 = 8.2021 feet
+   meter:2.5 = 2.734 yard
    ```
 
 2. 현재 지원 단위:
