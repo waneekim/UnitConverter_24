@@ -45,7 +45,7 @@ deactivate
    meter:2.5 = 8.2 feet
    meter:2.5 = 2.73 yard
    ```
-   여러 치수: 한 줄씩 입력 후 **빈 줄**로 변환 시작.
+   여러 치수(일괄): `python UnitConverter.py --batch` 후 한 줄씩 입력, **빈 줄**로 변환.
 
 2. 현재 지원 단위:
    - meter

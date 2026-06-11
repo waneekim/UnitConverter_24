@@ -2,4 +2,5 @@ feet_decimal=10.75
 meter=3.2765998951488036
 feet=10.75
 yard=3.583322411333683
+inch=129.0
 estimate_rounded=10.75

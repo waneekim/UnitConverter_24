@@ -2,7 +2,15 @@
 
 import re
 
-from constants import FEET_PER_METER, KNOWN_UNITS, R1_ARCH_INCH_DIVISOR, YARD_PER_METER
+from constants import (
+    CM_PER_METER,
+    FEET_PER_METER,
+    INCHES_PER_FOOT,
+    KNOWN_UNITS,
+    MM_PER_METER,
+    R1_ARCH_INCH_DIVISOR,
+    YARD_PER_METER,
+)
 
 _ARCH_PATTERN = re.compile(r"^(\d+)'-(\d+)\"$")
 _FRACTION_INCH_PATTERN = re.compile(r"^(\d+)(½|¼)\"$")
@@ -50,6 +58,8 @@ def parse_spec_to_feet_decimal(spec: str) -> float:
         raise LengthSpecError("Invalid format. Use unit:value (ex: meter:2.5)")
 
     unit, value_str = spec.split(":", 1)
+    unit = unit.strip()
+    value_str = value_str.strip()
     try:
         value = float(value_str)
     except ValueError:
@@ -62,4 +72,12 @@ def parse_spec_to_feet_decimal(spec: str) -> float:
         return value * FEET_PER_METER
     if unit == "feet":
         return value
-    return value * FEET_PER_METER / YARD_PER_METER
+    if unit == "yard":
+        return value * FEET_PER_METER / YARD_PER_METER
+    if unit == "cm":
+        return (value / CM_PER_METER) * FEET_PER_METER
+    if unit == "mm":
+        return (value / MM_PER_METER) * FEET_PER_METER
+    if unit == "inch":
+        return value / INCHES_PER_FOOT
+    raise LengthSpecError(f"Unknown unit: {unit}")

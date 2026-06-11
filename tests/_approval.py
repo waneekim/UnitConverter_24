@@ -28,6 +28,7 @@ def format_conversion_golden(result: ConversionResult) -> str:
         f"meter={result.meter}\n"
         f"feet={result.feet}\n"
         f"yard={result.yard}\n"
+        f"inch={result.inch}\n"
         f"estimate_rounded={est}\n"
     )
 

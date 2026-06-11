@@ -15,6 +15,11 @@ ERROR_INVALID_FORMAT = '형식이 올바르지 않습니다. 예: meter:2.5 또�
 ERROR_UNKNOWN_UNIT = "알 수 없는 단위: {unit}. 예: meter, feet, yard"
 
 
+def is_batch_mode(argv: list[str] | None = None) -> bool:
+    args = argv if argv is not None else sys.argv
+    return "--batch" in args
+
+
 def _format_length_spec_error(exc: LengthSpecError) -> str:
     msg = str(exc)
     if msg.startswith("Unknown unit:"):
@@ -70,34 +75,42 @@ def process_batch_input(specs: list[str]) -> tuple[list[str], str | None]:
     return all_lines, None
 
 
-def main() -> None:
-    print(INPUT_PROMPT)
-    print("(여러 치수: 한 줄씩 입력 후 빈 줄)")
+def run_single_from_stdin() -> None:
+    """U-FLOW-01 — 단건: 프롬프트 1회 → 즉시 출력."""
+    line = input(INPUT_PROMPT).strip()
+    if not line:
+        return
+    lines, error = process_input(line)
+    if error:
+        print(error)
+        return
+    for out_line in lines:
+        print(out_line)
+
+
+def run_batch_from_stdin() -> None:
+    """U-SINGLE-01 — 일괄: --batch 시에만 다중 줄 입력."""
     specs: list[str] = []
     while True:
         line = input(BATCH_PROMPT).strip()
         if not line:
             break
         specs.append(line)
-
-    if not specs:
-        line = input("치수 1개: ").strip()
-        if line:
-            specs = [line]
-
     if not specs:
         return
-
-    if len(specs) == 1:
-        lines, error = process_input(specs[0])
-    else:
-        lines, error = process_batch_input(specs)
-
+    lines, error = process_batch_input(specs)
     if error:
         print(error)
         return
-    for line in lines:
-        print(line)
+    for out_line in lines:
+        print(out_line)
+
+
+def main() -> None:
+    if is_batch_mode():
+        run_batch_from_stdin()
+    else:
+        run_single_from_stdin()
 
 
 if __name__ == "__main__":

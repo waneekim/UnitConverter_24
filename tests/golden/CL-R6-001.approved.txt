@@ -1,0 +1,6 @@
+feet_decimal=8.2021
+meter=2.5
+feet=8.2021
+yard=2.734025
+inch=98.42519999999999
+estimate_rounded=8.2

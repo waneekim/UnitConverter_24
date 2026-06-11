@@ -1,6 +1,11 @@
 """PRD §5.2 — convert_length / convert_lengths Command API."""
 
-from constants import DEFAULT_ESTIMATE_DECIMAL_PLACES, FEET_PER_METER, YARD_PER_METER
+from constants import (
+    DEFAULT_ESTIMATE_DECIMAL_PLACES,
+    FEET_PER_METER,
+    INCHES_PER_FOOT,
+    YARD_PER_METER,
+)
 from conversion_result import ConversionResult
 from length_spec import LengthSpecError, parse_spec_to_feet_decimal  # noqa: F401 — re-export
 
@@ -12,6 +17,7 @@ def convert_length(
     feet_decimal = parse_spec_to_feet_decimal(spec)
     meter = feet_decimal / FEET_PER_METER
     yard = meter * YARD_PER_METER
+    inch = feet_decimal * INCHES_PER_FOOT
     estimate = (
         round(feet_decimal, estimate_places) if estimate_places is not None else None
     )
@@ -21,6 +27,7 @@ def convert_length(
         meter=meter,
         feet=feet_decimal,
         yard=yard,
+        inch=inch,
         estimate_rounded=estimate,
     )
 

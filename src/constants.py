@@ -11,7 +11,10 @@ _DEFAULTS = {
     "r1_arch_inch_divisor": 8,
     "feet_compare_epsilon": 1e-9,
     "estimate_decimal_places": 2,
-    "known_units": ["meter", "feet", "yard"],
+    "known_units": ["meter", "feet", "yard", "cm", "mm", "inch"],
+    "cm_per_meter": 100,
+    "mm_per_meter": 1000,
+    "inches_per_foot": 12,
 }
 
 
@@ -33,3 +36,6 @@ R1_ARCH_INCH_DIVISOR = int(_CFG["r1_arch_inch_divisor"])
 FEET_COMPARE_EPSILON = float(_CFG["feet_compare_epsilon"])
 DEFAULT_ESTIMATE_DECIMAL_PLACES = int(_CFG["estimate_decimal_places"])
 KNOWN_UNITS = frozenset(_CFG["known_units"])
+CM_PER_METER = float(_CFG["cm_per_meter"])
+MM_PER_METER = float(_CFG["mm_per_meter"])
+INCHES_PER_FOOT = float(_CFG["inches_per_foot"])

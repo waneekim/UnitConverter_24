@@ -1,0 +1,3 @@
+stdout=meter: 2.5 = 2.5 meter
+meter: 2.5 = 8.2 feet
+meter: 2.5 = 2.73 yard

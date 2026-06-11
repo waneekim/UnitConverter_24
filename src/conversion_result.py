@@ -10,4 +10,5 @@ class ConversionResult:
     meter: float
     feet: float
     yard: float
+    inch: float
     estimate_rounded: float | None = None

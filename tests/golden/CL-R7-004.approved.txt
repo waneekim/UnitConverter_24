@@ -1,0 +1,6 @@
+feet_decimal=0.083333336
+meter=0.0254
+feet=0.083333336
+yard=0.027777694
+inch=1.000000032
+estimate_rounded=0.08

@@ -1,6 +1,8 @@
 # Mom Test 인터뷰 프롬프트
 
-## 역할 설정
+> **Cursor Command:** `/momtest` — 역할 반전 + **객관식(보기 3 + 4번 직접 입력)**. 정의: [.cursor/commands/momtest.md](../.cursor/commands/momtest.md)
+
+## 역할 설정 (AI 시뮬레이션용 — `/momtest`와 반대)
 
 ```
 Mom Test를 진행할거야.

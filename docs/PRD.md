@@ -72,6 +72,9 @@
 | feet | `value / 3.28084` |
 | yard | `value / 1.09361` |
 | meter | `value` (기준) |
+| cm | `value / 100` → meter |
+| mm | `value / 1000` → meter |
+| inch | `value / 12` → feet |
 
 ---
 
@@ -90,6 +93,9 @@
 | **FR-FMT-02** | D-FMT-02 | R4 | 빈 셀이 있으면 **incomplete**이며 `failed_lines`는 빈 리스트이다. | — |
 | **FR-OUT-01** | D-OUT-01 | R3 | *(선택)* 견적용 반올림·소수 자릿수 Rule을 적용한다. | 3~4분 손실 |
 | **FR-FMT-03** | D-FMT-03 | R1 | 분수 인치 단독 표기 `4½"`, `2¼"`를 소수 feet로 파싱한다 (`N½"` → `N.5/R1_DIVISOR`). | R2 증거 1 · 15분 |
+| **FR-FMT-04** | D-FMT-04 | R4 | `단위: 값` 형식에서 콜론 **앞뒤 공백**을 허용한다 (`meter: 2.5`). | R3 · 5분 |
+| **FR-UNIT-03** | D-UNIT-03 | R2 | `cm:` / `mm:` 입력을 meter 기준으로 파싱·변환한다 (`cm:100` = 1 m). | R6 · 10분 |
+| **FR-UNIT-04** | D-UNIT-04 | R2 | `inch:` 입력을 파싱하고 `ConversionResult.inch`를 반환한다 (`cm:2.54` → 1 inch). | R6 · Q5 |
 
 ### 4.2 Boundary Track — CLI 입력 (UI)
 
@@ -100,6 +106,8 @@
 | **FR-OUT-02** | U-OUT-01 | R3 | CLI 출력에 견적용 **2자리** 반올림 값을 표시한다. | R2 견적 3~4분 |
 | **FR-BATCH-02** | U-BATCH-01 | R4 | stdin **다중 줄** 1회 실행으로 N치수 변환한다. | R2 증거 3 · 8분 |
 | **FR-IN-03** | U-HINT-01 | R4 | 프롬프트·오류에 **한국어 입력 예시**를 표시한다. | R2 cmd 10분+ |
+| **FR-FLOW-01** | U-FLOW-01 | R4 | **단건** 실행 시 프롬프트 1회 → 즉시 출력한다. | R3 · 5분 |
+| **FR-SINGLE-01** | U-SINGLE-01 | R4 | **일괄**은 `--batch` 옵션으로만 다중 줄 입력한다. | R3 기대 vs 흐름 |
 
 ---
 
@@ -123,14 +131,14 @@ validate_lines(grid: list[list[str]]) -> dict
 
 | API | 입력 | 출력 |
 |-----|------|------|
-| `convert_length(spec: str)` | `"3'-6""`, `"meter:2.5"` 등 | `ConversionResult`: 입력 표기, 소수 feet, meter/feet/yard, (선택) 반올림 |
+| `convert_length(spec: str)` | `"3'-6""`, `"meter:2.5"`, `"cm:100"`, `"inch:12"` 등 | `ConversionResult`: 입력 표기, 소수 feet, meter/feet/yard/inch, (선택) 반올림 |
 | `convert_lengths(specs: list[str])` | 치수 목록 (최대 8+ fixture) | `list[ConversionResult]` |
 
 ### 5.3 `UnitConverter.py` (Boundary)
 
 - `process_input(spec)` — 단일 치수 → 견적용 2자리 출력 3줄
 - `process_batch_input(specs)` — N치수 일괄 → `convert_lengths` 위임
-- `main()` — 다중 줄 입력(빈 줄 종료) 또는 단일 줄
+- `main()` — 기본 **단건** 1프롬프트; `python UnitConverter.py --batch` 일괄 모드
 - FR-IN-01/02/03 · FR-OUT-02 · FR-BATCH-02 경계 검증
 
 ---
@@ -156,6 +164,13 @@ validate_lines(grid: list[list[str]]) -> dict
 | UI-BATCH-001 | FR-BATCH-02 | U-BATCH-01 | STEEL_DIMS_8 8줄 → 24줄 출력 |
 | UI-HINT-001 | FR-IN-03 | U-HINT-01 | 오류 메시지 한국어 예시 |
 | UI-HINT-002 | FR-IN-03 | U-HINT-01 | 시작 프롬프트 한국어 |
+| CL-R6-001 | FR-FMT-04 | D-FMT-04 | `meter: 2.5` 공백 허용 |
+| UI-FLOW-001 | FR-FLOW-01 | U-FLOW-01 | 단건 즉시 3줄 출력 |
+| UI-SINGLE-001 | FR-SINGLE-01 | U-SINGLE-01 | `--batch` 플래그 분기 |
+| CL-R7-001 | FR-UNIT-03 | D-UNIT-03 | `cm:100` → meter=1.0 |
+| CL-R7-002 | FR-UNIT-03 | D-UNIT-03 | `mm:2500` → meter=2.5 |
+| CL-R7-003 | FR-UNIT-04 | D-UNIT-04 | `inch:12` → feet=1.0, inch=12 |
+| CL-R7-004 | FR-UNIT-04 | D-UNIT-04 | `cm:2.54` → inch≈1.0 |
 
 ### 6.1 Fixture (Mom Test)
 
@@ -208,6 +223,8 @@ validate_lines(grid: list[list[str]]) -> dict
 | 5 | `UnitConverter.py` FR-IN-01/02 (boundary) | 후속 |
 | 6 | FR-OUT-01 견적 반올림 (R3) | **완료** |
 | 7 | Mom Test R2 — D-FMT-03 · U-OUT/BATCH/HINT | **완료** |
+| 8 | Mom Test R3 — D-FMT-04 · U-FLOW/SINGLE | **완료** |
+| 9 | Mom Test R6 — D-UNIT-03/04 (cm/mm/inch) | **완료** |
 
 ---
 

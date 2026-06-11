@@ -2,4 +2,5 @@ feet_decimal=3.75
 meter=1.1429999634240011
 feet=3.75
 yard=1.2499961900001217
+inch=45.0
 estimate_rounded=3.75
