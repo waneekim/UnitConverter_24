@@ -50,7 +50,7 @@ deactivate
 
 2. 현재 지원 단위:
    - meter, feet, yard, cm, mm, inch
-   - 건축 표기: `3'-6"`, `4½"`
+   - 건축 표기: `3'-6\"`, `4½\"`
 
 3. 새로운 단위가 추가될 때도 기존 코드의 변경이 최소화되도록 할 것.
 
@@ -84,11 +84,21 @@ deactivate
    - SRP를 만족하도록 클래스 구현 
    - 입력값 검증을 위한 구현
 3. TC 구현 (0.5시간)
-   - 단위변환 기능 검증 및 입력 값 검증 TC 작성 
+   - 단위변환 기능 검증 및 입력 값 검증 TC 작성
 4. 추가 요구사항 구현 (2시간)
-   - 3개 요구사항 구현 및 TC 작성 
+   - 3개 요구사항 구현 및 TC 작성
 5. 회고 및 발표 (1시간)
    - 실습 목표와 달성도
    - AI를 어떻게 활용했나? 도움이 된 순간과 한계는?
    - TC를 추가해보면서 개선에 미친 영향, TC 작성 팁
    - 클린코드와 리팩토링에서 느낀 장점과 어려운점
+
+## Skills
+
+### VD-Future-Strategy
+삼성전자 VD사업의 TV 산업 변화, 경쟁구도, AI TV, 플랫폼, TV Plus, SmartThings, 조직·R&D·PM 전환을 분석하는 미래전략 Skill.
+
+- Skill: `.claude/skills/vd-future-strategy/SKILL.md`
+- 전략 문서: `docs/VD-FUTURE-STRATEGY.md`
+- 핵심 흐름: `FACT → SIGNAL → INTERPRETATION → HYPOTHESIS → ACTION → KPI → REVIEW`
+- 목표 프레임: `TV Hardware → AI TV → AI Screen → AI Home Platform`
